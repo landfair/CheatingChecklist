@@ -157,18 +157,19 @@
     margin-bottom: 1.25rem;
   }
 
-  /* ── Page header ── */
-  .page-header {
+  /* ── Nav title ── */
+  #nav .nav-title {
     font-family: var(--font);
     font-weight: 700;
-    font-size: 2rem;
-    letter-spacing: -0.02em;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
     color: var(--violet);
-    width: 100%;
-    max-width: var(--max-w);
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.6rem;
-    border-bottom: 3px solid var(--violet);
+    white-space: nowrap;
+    padding: 0 1rem;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* ── Buttons ── */
@@ -487,11 +488,6 @@
 
     .screen { padding: 1.5rem 0.85rem 4rem; }
 
-    .page-header {
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
-    }
-
     .card {
       padding: 1.4rem 1.25rem;
       border-radius: 8px;
@@ -522,6 +518,7 @@
     /* Nav: tighter on smaller screens */
     #nav { padding: 0 1rem; height: 54px; }
     #nav .nav-logo img { height: 30px; }
+    #nav .nav-title { font-size: 0.88rem; padding: 0 0.6rem; }
     #nav button { font-size: 0.78rem; padding: 0 0.6rem; }
 
     /* Quiz */
@@ -563,12 +560,6 @@
 
     .screen { padding: 1.25rem 0.65rem 3.5rem; }
 
-    .page-header {
-      font-size: 1.4rem;
-      padding-bottom: 0.5rem;
-      margin-bottom: 0.85rem;
-    }
-
     .card {
       padding: 1.1rem 1rem;
       margin-bottom: 0.85rem;
@@ -592,6 +583,7 @@
     /* Nav: collapse label on very small screens */
     #nav { padding: 0 0.75rem; height: 50px; gap: 0; }
     #nav .nav-logo img { height: 26px; }
+    #nav .nav-title { display: none; }
     #nav button {
       font-size: 0.72rem;
       padding: 0 0.45rem;
@@ -626,6 +618,7 @@
   <a class="nav-logo" href="#home" aria-label="Home">
     <img src="https://i.imgur.com/iIODsNl.png" alt="NYU logo">
   </a>
+  <span class="nav-title">Cheating Checklist</span>
   <button onclick="navigate('home')">Home</button>
   <button onclick="navigate('about')">About</button>
   <button onclick="navigate('sources')">Sources</button>
@@ -633,7 +626,7 @@
 
 <!-- ── Home Screen ── -->
 <div id="screen-home" class="screen">
-  <div class="page-header">Cheating Checklist</div>
+
   <div class="card">
     <h2>Will Students Cheat on This Assignment?</h2>
     <p class="intro">Welcome! This self-assessment helps college professors assess the likelihood that students will cheat in given courses or on given assignments.</p>
@@ -648,7 +641,7 @@
 
 <!-- ── About Screen ── -->
 <div id="screen-about" class="screen">
-  <div class="page-header">Cheating Checklist</div>
+
   <div class="card content-card">
     <h2>About</h2>
     <p>The advent of generative AI tools like ChatGPT has made cheating easier and less risky than ever before—and there's not much we can do about it. Detection tools are unreliable and increased surveillance undermines the trust and goodwill our classes depend on.</p>
@@ -675,7 +668,7 @@
 
 <!-- ── Quiz Screen ── -->
 <div id="screen-quiz" class="screen">
-  <div class="page-header">Cheating Checklist</div>
+
   <div id="progress-bar-wrap"><div id="progress-bar" style="width:0%"></div></div>
   <div id="progress-label">Statement 1 of 13</div>
   <div class="card" id="question-card">
@@ -688,7 +681,7 @@
 
 <!-- ── Results Screen ── -->
 <div id="screen-results" class="screen">
-  <div class="page-header">Cheating Checklist</div>
+
   <div class="card" id="results-card">
     <!-- Populated by JS -->
   </div>
@@ -696,7 +689,7 @@
 
 <!-- ── Sources Screen ── -->
 <div id="screen-sources" class="screen">
-  <div class="page-header">Cheating Checklist</div>
+
   <div class="card content-card">
     <h2>Sources &amp; Further Reading</h2>
     <ul class="sources-list">
