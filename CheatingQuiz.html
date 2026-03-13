@@ -358,7 +358,6 @@
     transition: width 0.7s ease;
     background: var(--violet);
   }
-  .cat-bar-fill.cat-weak { background: #c0392b; }
   .cat-description {
     font-size: 0.78rem;
     color: var(--muted);
@@ -1432,7 +1431,7 @@ function showResults() {
           <span class="cat-label">${cat.label}</span>
         </div>
         <div class="cat-bar-bg">
-          <div class="cat-bar-fill${isWeak ? ' cat-weak' : ''}" style="width:${pct}%"></div>
+          <div class="cat-bar-fill" style="width:${pct}%"></div>
         </div>
         <div class="cat-description">${cat.description}</div>
       </div>`;
