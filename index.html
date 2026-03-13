@@ -10,7 +10,7 @@
 <title>Will Students Cheat on This Assignment?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 <style>
   /*
    * NYU Color Palette (from brand guidelines)
@@ -88,7 +88,7 @@
     padding: 0 1.5rem;
     padding-left: max(1.5rem, env(safe-area-inset-left));
     padding-right: max(1.5rem, env(safe-area-inset-right));
-    height: 70px;
+    height: 76px;
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -97,6 +97,7 @@
     z-index: 100;
     border-bottom: 3px solid var(--violet);
     box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    position: relative; /* contain the absolutely-positioned nav-title */
   }
   #nav .nav-logo {
     display: flex;
@@ -159,17 +160,16 @@
 
   /* ── Nav title ── */
   #nav .nav-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     font-family: var(--font);
-    font-weight: 700;
-    font-size: 1rem;
-    letter-spacing: 0.01em;
+    font-weight: 300;
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
     color: var(--violet);
     white-space: nowrap;
-    padding: 0 1rem;
-    flex-shrink: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    pointer-events: none;
   }
 
   /* ── Buttons ── */
@@ -516,9 +516,9 @@
     }
 
     /* Nav: tighter on smaller screens */
-    #nav { padding: 0 1rem; height: 62px; }
+    #nav { padding: 0 1rem; height: 66px; }
     #nav .nav-logo img { height: 45px; }
-    #nav .nav-title { font-size: 0.88rem; padding: 0 0.6rem; }
+    #nav .nav-title { font-size: 1.3rem; }
     #nav button { font-size: 0.78rem; padding: 0 0.6rem; }
 
     /* Quiz */
@@ -581,9 +581,9 @@
     h2 { font-size: 1.15rem; }
 
     /* Nav: collapse label on very small screens */
-    #nav { padding: 0 0.75rem; height: 56px; gap: 0; }
+    #nav { padding: 0 0.75rem; height: 60px; gap: 0; }
     #nav .nav-logo img { height: 39px; }
-    #nav .nav-title { display: none; }
+    #nav .nav-title { font-size: 1rem; }
     #nav button {
       font-size: 0.72rem;
       padding: 0 0.45rem;
