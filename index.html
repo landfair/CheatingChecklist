@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#57068c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Will Students Cheat on This Assignment?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  /*
+   * NYU Color Palette (from brand guidelines)
+   * Primary:   NYU Violet   #57068c   Deep Violet  #330662
+   * Secondary: Light Violet 2 #eee6f3  (tinted bg)
+   *            Light Violet 1 #ab82c5  (decorative)
+   * Neutrals:  Dark Gray    #404040   (body text — 9.6:1 on white/light gray)
+   *            Light Gray   #f2f2f2   (page bg — approved pairing)
+   *            Medium Gray 2 #b8b8b8  (borders)
+   *            White        #ffffff
+   * Accents:   Ultra Violet #8900e1   (hover state on violet elements only,
+   *                                    NEVER as text — 1.7:1 contrast fails)
+   *
+   * Approved high-contrast pairings used here:
+   *   White (#fff) on NYU Violet (#57068c)    — 11.6:1 ✓
+   *   Dark Gray (#404040) on Light Gray       — 9.6:1  ✓
+   *   Dark Gray (#404040) on White            — 9.6:1  ✓
+   *   White (#fff) on Ultra Violet (#8900e1)  — 6.7:1  ✓  (hover only)
+   */
+
+  /* ── Variables ── */
+  :root {
+    --violet:        #57068c;   /* NYU Violet — primary brand color          */
+    --violet-deep:   #330662;   /* Deep Violet — nav bar, dark surfaces      */
+    --violet-hover:  #8900e1;   /* Ultra Violet — hover state on violet      */
+    --violet-tint:   #eee6f3;   /* Light Violet 2 — callout backgrounds      */
+    --violet-mid:    #ab82c5;   /* Light Violet 1 — decorative borders       */
+    --text:          #404040;   /* Dark Gray — all body text                 */
+    --muted:         #6d6d6d;   /* Medium Gray 1 — secondary/caption text    */
+    --border:        #b8b8b8;   /* Medium Gray 2 — dividers, input borders   */
+    --border-light:  #d6d6d6;   /* Medium Gray 3 — subtle dividers           */
+    --page-bg:       #f2f2f2;   /* Light Gray — page background              */
+    --card-bg:       #ffffff;   /* White — card surfaces                     */
+    --radius:        10px;
+    --shadow:        0 2px 12px rgba(87,6,140,0.10);
+    --shadow-md:     0 4px 24px rgba(87,6,140,0.13);
+    --transition:    0.25s ease;
+    --max-w:         700px;
+    --font:          'Montserrat', Arial, sans-serif;
+  }
+
+  /* ── Reset & base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: var(--page-bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    min-height: 100vh;
+    min-height: 100dvh; /* dynamic viewport height — correct on mobile browsers */
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%; /* prevent iOS font inflation on rotation */
+    text-size-adjust: 100%;
+  }
+  a { color: var(--violet); text-decoration: underline; }
+  a:hover { color: var(--violet-hover); }
+  h1, h2, h3 {
+    font-family: var(--font);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--violet);
+  }
+  h2 { font-size: 1.45rem; margin-bottom: 0.8rem; letter-spacing: -0.01em; }
+  h3 { font-size: 1.05rem; margin-bottom: 0.45rem; }
+  p { margin-bottom: 0.9rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 0.9rem; }
+  li { margin-bottom: 0.35rem; }
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+
+  /* ── Nav bar ── */
+  #nav {
+    background: #fff;
+    padding: 0 1.5rem;
+    padding-left: max(1.5rem, env(safe-area-inset-left));
+    padding-right: max(1.5rem, env(safe-area-inset-right));
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--violet);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+  }
+  #nav .nav-logo {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    text-decoration: none;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  #nav .nav-logo img {
+    height: 36px;
+    width: auto;
+    display: block;
+  }
+  #nav button {
+    background: none;
+    border: none;
+    color: var(--violet);
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    transition: background var(--transition), color var(--transition);
+  }
+  #nav button:hover {
+    background: var(--violet-tint);
+    color: var(--violet-hover);
+  }
+
+  /* ── Screen wrapper ── */
+  .screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.25rem 1rem calc(5rem + env(safe-area-inset-bottom));
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity var(--transition), transform var(--transition);
+  }
+  .screen.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: var(--max-w);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── Page header ── */
+  .page-header {
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    color: var(--violet);
+    width: 100%;
+    max-width: var(--max-w);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 3px solid var(--violet);
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-block;
+    background: var(--violet);
+    color: #fff;
+    border: 2px solid var(--violet);
+    border-radius: 6px;
+    padding: 0.6rem 1.4rem;
+    font-family: var(--font);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition), transform 0.1s;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn:hover {
+    background: var(--violet-hover);
+    border-color: var(--violet-hover);
+    color: #fff;
+    text-decoration: none;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-outline {
+    background: transparent;
+    color: var(--violet);
+    border: 2px solid var(--violet);
+  }
+  .btn-outline:hover {
+    background: var(--violet-tint);
+    border-color: var(--violet-hover);
+    color: var(--violet);
+  }
+  .btn-sm { font-size: 0.8rem; padding: 0.4rem 0.9rem; }
+
+  /* ── Home screen ── */
+  #screen-home .intro { font-size: 1rem; color: var(--text); }
+  #screen-home .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.35rem;
+  }
+
+  /* ── About / Sources screen ── */
+  .content-card { font-size: 0.96rem; }
+  .content-card h2 { margin-bottom: 1rem; }
+  .content-card .question-callout {
+    color: var(--violet);
+    font-style: italic;
+    font-weight: 700;
+    margin: 1.1rem 0 0.35rem;
+  }
+  .sources-list { list-style: none; padding: 0; }
+  .sources-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 0.86rem;
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .sources-list li:last-child { border-bottom: none; }
+
+  /* ── Quiz screen ── */
+  #screen-quiz { padding-top: 1.5rem; }
+  #progress-bar-wrap {
+    width: 100%;
+    max-width: var(--max-w);
+    background: var(--border-light);
+    border-radius: 100px;
+    height: 5px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+  #progress-bar {
+    height: 100%;
+    background: var(--violet);
+    border-radius: 100px;
+    transition: width 0.45s ease;
+  }
+  #progress-label {
+    width: 100%;
+    max-width: var(--max-w);
+    text-align: right;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  #question-card { padding: 1.75rem 2rem; }
+  #question-text {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    line-height: 1.55;
+  }
+  .answer-btn {
+    display: block;
+    width: 100%;
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 1.1rem;
+    font-family: var(--font);
+    font-size: 0.93rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
+    color: var(--text);
+  }
+  .answer-btn:hover {
+    border-color: var(--violet);
+    background: var(--violet-tint);
+    color: var(--violet);
+  }
+  .answer-btn:last-child { margin-bottom: 0; }
+  #explain-btn-wrap { margin-bottom: 1.25rem; }
+  #explain-btn-wrap:empty { margin-bottom: 0; }
+
+  /* ── Results screen ── */
+  #screen-results .result-header {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--violet);
+    margin-bottom: 0.8rem;
+  }
+  .score-badge {
+    display: inline-block;
+    background: var(--violet);
+    color: #fff;
+    border-radius: 100px;
+    padding: 0.2rem 1rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .result-examples {
+    background: var(--violet-tint);
+    border-left: 4px solid var(--violet);
+    border-radius: 0 6px 6px 0;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .result-examples ul { margin-bottom: 0; }
+  .result-nav { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.35rem; }
+
+  /* ── Modal ── */
+  #modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(51,6,98,0.6);
+    backdrop-filter: blur(3px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  #modal-overlay.open { display: flex; }
+  #modal-content {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    max-width: 680px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 2rem 2.5rem;
+    position: relative;
+    border-top: 5px solid var(--violet);
+  }
+  #modal-close {
+    position: sticky;
+    top: -2rem;
+    float: right;
+    background: var(--violet);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font);
+    transition: background var(--transition);
+  }
+  #modal-close:hover { background: var(--violet-hover); }
+  #modal-body h3 {
+    color: var(--violet);
+    margin-bottom: 0.7rem;
+  }
+  #modal-body .example-block {
+    background: var(--violet-tint);
+    border-left: 4px solid var(--violet-mid);
+    padding: 0.8rem 1rem;
+    border-radius: 0 6px 6px 0;
+    margin: 0.8rem 0;
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--text);
+  }
+  #modal-body .example-label {
+    font-weight: 700;
+    font-style: normal;
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--violet);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  #modal-body .sources-mini {
+    margin-top: 1.25rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border-light);
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  #modal-body .sources-mini strong {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+  }
+
+  /* ═══════════════════════════════════════════
+     RESPONSIVE — mobile-first breakpoints
+     • Touch targets: minimum 44×44px (WCAG 2.5.5)
+     • No JS UA sniffing — CSS media queries are
+       the correct, future-proof approach
+     ═══════════════════════════════════════════ */
+
+  /* Ensure interactive elements are always
+     comfortably tappable on any touch screen   */
+  @media (hover: none) and (pointer: coarse) {
+    /* Touch device: enlarge tap targets */
+    .answer-btn {
+      padding: 1rem 1.1rem;
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      min-height: 52px;
+    }
+    .btn {
+      min-height: 48px;
+      padding: 0.75rem 1.4rem;
+      font-size: 0.95rem;
+    }
+    .btn-sm {
+      min-height: 44px;
+      padding: 0.65rem 1rem;
+      font-size: 0.88rem;
+    }
+    #nav button {
+      min-height: 44px;
+      padding: 0 0.85rem;
+    }
+    /* Remove hover styles that feel "stuck" on touch */
+    .answer-btn:hover {
+      border-color: var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+    }
+    .btn:hover {
+      background: var(--violet);
+      border-color: var(--violet);
+    }
+    .btn-outline:hover {
+      background: transparent;
+      border-color: var(--violet);
+      color: var(--violet);
+    }
+    /* Visible active/pressed state instead */
+    .answer-btn:active {
+      border-color: var(--violet);
+      background: var(--violet-tint);
+      color: var(--violet);
+    }
+    .btn:active {
+      background: var(--violet-hover);
+      border-color: var(--violet-hover);
+      transform: scale(0.97);
+    }
+    .btn-outline:active {
+      background: var(--violet-tint);
+    }
+  }
+
+  /* ── Tablet (portrait + landscape): 768px – 1024px ── */
+  @media (max-width: 1024px) {
+    :root { --max-w: 680px; }
+    .card { padding: 1.75rem 2rem; }
+    #modal-content { padding: 1.75rem 2rem; }
+  }
+
+  /* ── Large phone / phablet: 481px – 767px ── */
+  @media (max-width: 767px) {
+    :root { --max-w: 100%; }
+
+    body { font-size: 15px; }
+
+    .screen { padding: 1.5rem 0.85rem 4rem; }
+
+    .page-header {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      padding: 1.4rem 1.25rem;
+      border-radius: 8px;
+    }
+
+    h2 { font-size: 1.25rem; }
+    h3 { font-size: 1rem; }
+
+    /* Buttons go full-width and stack */
+    .btn-group {
+      flex-direction: column;
+    }
+    .btn-group .btn,
+    .btn-group .btn-outline {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+    }
+    .result-nav {
+      flex-direction: column;
+    }
+    .result-nav .btn,
+    .result-nav .btn-outline {
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Nav: tighter on smaller screens */
+    #nav { padding: 0 1rem; height: 54px; }
+    #nav .nav-logo img { height: 30px; }
+    #nav button { font-size: 0.78rem; padding: 0 0.6rem; }
+
+    /* Quiz */
+    #screen-quiz { padding-top: 1rem; }
+    #question-card { padding: 1.25rem 1rem; }
+    #question-text { font-size: 1rem; margin-bottom: 1.1rem; }
+    #progress-label { font-size: 0.7rem; }
+
+    /* Modal: full-width, slides up from bottom */
+    #modal-overlay {
+      align-items: flex-end;
+      padding: 0;
+    }
+    #modal-content {
+      max-height: 90vh;
+      border-radius: 14px 14px 0 0;
+      padding: 1.5rem 1.25rem 2rem;
+      border-top-width: 4px;
+    }
+    #modal-close {
+      top: 0;
+      margin-bottom: 0.75rem;
+    }
+
+    /* About page inline button row */
+    div[style*="display:flex"] {
+      flex-direction: column;
+      gap: 0.65rem !important;
+    }
+    div[style*="display:flex"] .btn,
+    div[style*="display:flex"] .btn-outline {
+      width: 100%;
+    }
+  }
+
+  /* ── Small phone: ≤ 480px ── */
+  @media (max-width: 480px) {
+    body { font-size: 15px; }
+
+    .screen { padding: 1.25rem 0.65rem 3.5rem; }
+
+    .page-header {
+      font-size: 1.4rem;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .card {
+      padding: 1.1rem 1rem;
+      margin-bottom: 0.85rem;
+      /* Edge-to-edge feel on very small screens */
+      border-radius: 0;
+      box-shadow: none;
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    /* Keep the question card rounded */
+    #question-card {
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 1rem 0.9rem;
+      border: none;
+    }
+
+    h2 { font-size: 1.15rem; }
+
+    /* Nav: collapse label on very small screens */
+    #nav { padding: 0 0.75rem; height: 50px; gap: 0; }
+    #nav .nav-logo img { height: 26px; }
+    #nav button {
+      font-size: 0.72rem;
+      padding: 0 0.45rem;
+      letter-spacing: 0.02em;
+    }
+
+    #question-text { font-size: 0.97rem; line-height: 1.5; }
+
+    .answer-btn {
+      font-size: 0.97rem;
+      padding: 0.9rem 0.9rem;
+    }
+
+    .score-badge { font-size: 0.75rem; }
+
+    #modal-content {
+      padding: 1.25rem 1rem 1.75rem;
+      max-height: 92vh;
+    }
+
+    #modal-body .example-block {
+      font-size: 0.88rem;
+      padding: 0.65rem 0.85rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav id="nav">
+  <a class="nav-logo" href="#home" aria-label="Home">
+    <img src="https://i.imgur.com/iIODsNl.png" alt="NYU logo">
+  </a>
+  <button onclick="navigate('home')">Home</button>
+  <button onclick="navigate('about')">About</button>
+  <button onclick="navigate('sources')">Sources</button>
+</nav>
+
+<!-- ── Home Screen ── -->
+<div id="screen-home" class="screen">
+  <div class="page-header">Cheating Checklist</div>
+  <div class="card">
+    <h2>Will Students Cheat on This Assignment?</h2>
+    <p class="intro">Welcome! This self-assessment helps college professors assess the likelihood that students will cheat in given courses or on given assignments.</p>
+    <p class="intro">Hopefully, you'll leave with a few new strategies for making cheating less likely and learning more likely.</p>
+    <div class="btn-group">
+      <button class="btn" onclick="startQuiz()">Begin self-assessment</button>
+      <button class="btn btn-outline" onclick="navigate('about')">Tell me more</button>
+      <button class="btn btn-outline btn-sm" onclick="navigate('sources')">Sources &amp; Further Reading</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── About Screen ── -->
+<div id="screen-about" class="screen">
+  <div class="page-header">Cheating Checklist</div>
+  <div class="card content-card">
+    <h2>About</h2>
+    <p>The advent of generative AI tools like ChatGPT has made cheating easier and less risky than ever before—and there's not much we can do about it. Detection tools are unreliable and increased surveillance undermines the trust and goodwill our classes depend on.</p>
+    <p>Thankfully, decades of research on cheating tells us that's the wrong approach, anyway. Instead of making cheating harder or riskier for students, we should be making cheating feel less attractive and less necessary.</p>
+    <p class="question-callout">How do we do that?</p>
+    <p>Thankfully, education research names specific features of classrooms and assignments that induce or reduce cheating behaviors. Most of these you've already heard of, and many are probably already visible in your class design.</p>
+    <p>There's more. The same features of assignments that reduce cheating also promote learning. In other words, cheating flourishes where learning flounders.</p>
+    <p class="question-callout">Wait. Are you saying it's my fault when students cheat?</p>
+    <p>Not quite! Cheating can happen even in the most thoughtfully designed classrooms, like yours. The point is, rather, that understanding cheaters shows us how to improve our classes for all students. And it's not by increasing surveillance or adding new hurdles, which might undermine the learning environment.</p>
+    <p>Instead, the answer is tweaking your syllabus and assignments in ways that address the root causes of cheating. Experts who study cheating suggest three environmental factors that can induce or reduce cheating. They tell us that humans are more likely to cheat when they feel:</p>
+    <ul>
+      <li>low self-efficacy</li>
+      <li>low intrinsic motivation, and/or</li>
+      <li>high pressure to perform well</li>
+    </ul>
+    <p>Therefore, we can discourage unsanctioned student use of generative AI tools by creating learning environments that promote self-efficacy, foster intrinsic motivation, and emphasize mastery over performance.</p>
+    <p>Drawing on popular learning guides as well as research on human learning, this checklist helps educators not only deter students who might cheat, but also improve the learning environment for everyone.</p>
+    <div style="margin-top:1.25rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+      <button class="btn" onclick="startQuiz()">Begin self-assessment</button>
+      <button class="btn btn-outline" onclick="navigate('home')">Return to homepage</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Quiz Screen ── -->
+<div id="screen-quiz" class="screen">
+  <div class="page-header">Cheating Checklist</div>
+  <div id="progress-bar-wrap"><div id="progress-bar" style="width:0%"></div></div>
+  <div id="progress-label">Statement 1 of 13</div>
+  <div class="card" id="question-card">
+    <div id="question-text"></div>
+    <div id="explain-btn-wrap"></div>
+    <div id="answer-buttons"></div>
+  </div>
+  <button class="btn btn-outline btn-sm" onclick="confirmReset()">Start over</button>
+</div>
+
+<!-- ── Results Screen ── -->
+<div id="screen-results" class="screen">
+  <div class="page-header">Cheating Checklist</div>
+  <div class="card" id="results-card">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+<!-- ── Sources Screen ── -->
+<div id="screen-sources" class="screen">
+  <div class="page-header">Cheating Checklist</div>
+  <div class="card content-card">
+    <h2>Sources &amp; Further Reading</h2>
+    <ul class="sources-list">
+      <li>Anderman, Eric M., Trip Griesinger, and Gloria Westerfield, "Motivation and Cheating During Adolescence," <em>Journal of Educational Psychology</em> 0.1 (1998).</li>
+      <li>Ames, Carole. "Classrooms: Goals, Structures, and Student Motivation," <em>Journal of Educational Psychology</em> 84.3 (1992).</li>
+      <li>Bain, Ken. <em>What the Best College Teachers Do.</em> Harvard University Press, Cambridge, MA. 2004.</li>
+      <li>Bain, Ken. <em>What the Best College Students Do.</em> Harvard University Press, Cambridge, MA. 2012.</li>
+      <li>Bowers, William J. <em>Student Dishonesty and Its Control in College.</em> New York: Columbia University, Bureau of Applied Social Research, 1964.</li>
+      <li>Butcher, Kirsten R. &amp; Walter Kintsch (2001). Support of Content and Rhetorical Processes of Writing: Effects on the Writing Process and the Written Product. <em>Cognition and Instruction,</em> 19:3, 277–322. DOI: 10.1207/S1532690XCI1903_2</li>
+      <li>Davis, Lajuan. "Arresting Student Plagiarism: Are We Investigators or Educators?" <em>Business Communication Quarterly</em> 74.2 (June 2011).</li>
+      <li>Flower, L., &amp; Hayes, J. R. (1981). A Cognitive Process Theory of Writing. <em>College Composition and Communication,</em> 32(4), 365–387. https://doi.org/10.2307/356600</li>
+      <li>Hacker, D.J., Keener, M.C. and Kircher, J.C. (2009). Writing Is Applied Metacognition. In: Hacker, D.J., Dunlosky, J. and Graesser, A.C., Eds., <em>Handbook of Metacognition in Education.</em> Routledge/Taylor &amp; Francis, New York, 154–172.</li>
+      <li>Harris, K. R., Santangelo, T., &amp; Graham, S. (2010). Metacognition and strategies instruction in writing. <em>Metacognition, strategy use, and instruction,</em> 226–256.</li>
+      <li>Kellogg, R.T. (2008). Training writing skills: A cognitive developmental perspective. <em>Journal of Writing Research,</em> 1(1), 1–26.</li>
+      <li>Klein, Perry D. &amp; Katrina N. Haug &amp; Nina Arcon (2017). The Effects of Rhetorical and Content Subgoals on Writing and Learning. <em>The Journal of Experimental Education,</em> 85:2, 291–308. DOI: 10.1080/00220973.2016.1143795</li>
+      <li>Lang, James M. <em>Cheating Lessons.</em> Harvard University Press. Cambridge, MA. 2013.</li>
+      <li>Lang, James M. "Metacognition and Student Learning." <em>The Chronicle of Higher Education,</em> January 17, 2012.</li>
+      <li>Lang, James M. "Teaching and Human Memory, Part 1." <em>The Chronicle of Higher Education,</em> November 15, 2011.</li>
+      <li>Lang, James M. "Teaching and Human Memory, Part 2." <em>The Chronicle of Higher Education,</em> December 14, 2011.</li>
+      <li>Lang, James M. "The Grounded Curriculum, Part 2." <em>The Chronicle of Higher Education,</em> August 15, 2012.</li>
+      <li>Lang, James M. "Why Don't They Apply What they've Learned?, Part 1." <em>The Chronicle of Higher Education,</em> January 21, 2013.</li>
+      <li>Lang, James M. "Why Don't They Apply What they've Learned?, Part 2." <em>The Chronicle of Higher Education,</em> February 19, 2013.</li>
+      <li>Lang, James M. "Why Don't They Apply What they've Learned?, Part 3." <em>The Chronicle of Higher Education,</em> March 20, 2013.</li>
+      <li>McCabe, Donald L. and Linda Klebe Trevino. "Individual and Contextual Influences on Academic Dishonesty: A Multi-Campus Investigation." <em>Research in Higher Education</em> 38.3 (1997).</li>
+      <li>McCabe, Donald L. and Linda Klebe Trevino. "What We Know About Cheating In College: Longitudinal Trends and Recent Developments." <em>Change</em> 28.1 (1996).</li>
+      <li>McCabe, Donald L., Linda Klebe Trevino and Kenneth D. Butterfield. "Cheating in Academic Institutions: A Decade of Research." <em>Ethics and Behavior</em> 11.3 (2001).</li>
+      <li>McCabe, Donald L., Kenneth D. Butterfield, and Linda K. Trevino. <em>Cheating in College: Why Students Do It and What Educators Can Do About It.</em> Baltimore: Johns Hopkins University Press, 2012.</li>
+      <li>Miller, Michelle. "What College Teachers Should Know About Memory: A Perspective from Cognitive Psychology." <em>College Teaching</em> 59 (2011).</li>
+      <li>Murdock, Tamera B. and Eric M. Anderman. "Motivational Perspectives on Student Cheating: Toward an Integrated Model of Academic Dishonesty." <em>Educational Psychologist</em> 41.3 (2006).</li>
+      <li>Murdock, Tamera B.; Angela Miller; and Julie Kohlhardt. "Effects of Classroom Context Variable on High School Students' Judgements of the Acceptability and Likelihood of Cheating." <em>Journal of Educational Psychology</em> 96.4 (2004).</li>
+      <li>Roumell, E. A. (2019). Priming Adult Learners for Learning Transfer: Beyond Content and Delivery. <em>Adult Learning,</em> 30(1), 15–22.</li>
+      <li>Sommers, N. (1980). Revision Strategies of Student Writers and Experienced Adult Writers. <em>College Composition and Communication,</em> 31(4), 378–388. https://doi.org/10.2307/356588</li>
+      <li>Young, Mark R. "The Motivational Effects of the Classroom Environment in Facilitating Self-Regulated Learning." <em>Journal of Marketing Education</em> 27 (2005).</li>
+      <li>Zou, Jenny Jie. "With Cheating Only a Click Away, Professors Reduce the Incentive." <em>The Chronicle of Higher Education,</em> September 4, 2011.</li>
+    </ul>
+    <div style="margin-top:1.25rem;">
+      <button class="btn btn-outline" onclick="navigate('home')">Return to homepage</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal ── -->
+<div id="modal-overlay" role="dialog" aria-modal="true">
+  <div id="modal-content">
+    <button id="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ──────────────────────────────────────────────
+// State
+// ──────────────────────────────────────────────
+const state = {
+  score: 0,
+  currentQuestion: 0,
+  answers: []
+};
+
+// ──────────────────────────────────────────────
+// Question data
+// ──────────────────────────────────────────────
+const STD_OPTIONS = [
+  { label: "Always",              value: 5 },
+  { label: "Usually",             value: 4 },
+  { label: "About half of the time", value: 3 },
+  { label: "Rarely",              value: 2 },
+  { label: "Never",               value: 1 }
+];
+
+const questions = [
+  {
+    id: 1,
+    text: "In my classroom, students have opportunities to revise high-stakes writing assignments.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Promoting self-efficacy with multiple-draft classrooms</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by developing students' sense of competence.</strong> And multiple-draft classrooms are one of the best ways to do this.</p>
+      <p>Studies show we're less likely to cheat when we have multiple shots at success. Moreover, every failed attempt is an opportunity for growth.</p>
+      <p>Students in multiple draft classrooms have far less incentive to cheat. But more importantly, they have the affordance of viewing each draft as an opportunity for growth through repeated failure. That's exactly the kind of risk-taking, mastery-oriented mentality educators hope to instill.</p>
+      <p>Since the 1970s, compositionists have studied the benefits of multiple-draft classrooms. More recently, cognitive scientists have found empirical support for these practices. Together, they offer a wonderfully paradoxical conclusion: Presented with more opportunities to cheat, students will cheat less often.</p>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        "Your first draft (due September 1st) should reflect the best work you can do on your own. Your final draft (due September 30th) must be accompanied by a brief reflection letter detailing (a) the feedback you received from me as well as your peers and (b) the nature and scope of your revisions."
+      </div>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        "Students have the option to radically revise any essay for a higher grade. However, revisions must be accompanied by a brief reflection letter detailing (a) the feedback you received from me as well as your peers and (b) the nature and scope of your revisions."
+      </div>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Flower, L., &amp; Hayes, J. R. (1981). A Cognitive Process Theory of Writing. <em>College Composition and Communication,</em> 32(4), 365–387.<br>
+        Kellogg, R.T. (2008). Training writing skills: A cognitive developmental perspective. <em>Journal of Writing Research,</em> 1(1), 1–26.<br>
+        Lang, James M. <em>Cheating Lessons.</em> Harvard University Press. Cambridge, MA. 2013.<br>
+        Sommers, N. (1980). Revision Strategies of Student Writers and Experienced Adult Writers. <em>College Composition and Communication,</em> 31(4), 378–388.
+      </div>`
+  },
+  {
+    id: 2,
+    text: "My students are required to provide one another with written feedback on major written assignments.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Promoting self-efficacy by fostering metacognitive skills</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by fostering students' metacognitive skills.</strong> And peer-review is one great way to do this.</p>
+      <p><em>Metacognition</em> is the ability to reflect upon one's own knowledge level and decision-making processes. Students with greater metacognitive skills feel more competent and have less motivation to cheat.</p>
+      <h3>Promoting metacognition through peer-review</h3>
+      <p>Decades of research demonstrates the positive impact of peer-review on student learning. This is because continuous feedback helps students (a) to better anticipate the needs and expectations of their readers and (b) to assess their knowledge level and track the stages of their development. Increased metacognitive abilities mean gains in self-efficacy.</p>
+      <p>However, one recent study of second-language writers suggests that peer-review provides the greatest benefit to the reviewers themselves. In other words, peer-review exercises help students to develop assessment frameworks that they then apply to their own writing.</p>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        "In fewer than 500 words, reflect on the patterns and trends you observed in the feedback you've received from your instructor and your peers. What moments struck your readers as awkward, unclear, or ambiguous? Where did your readers need or expect your ideas to be clarified or further developed? How might you address these challenges in revision?"
+      </div>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        Before our next class, you'll provide two classmates with feedback in the form of a letter. Your letter will "dramatize the presence of a reader" by pointing out moments that struck you as confusing, clear, awkward, surprising, obvious etc. Your classmates will find it very helpful, as well, if you can simply "say back" or paraphrase the ideas in paragraphs that seem especially important or hard to understand. As writers, this is how we know we're being clear, so please try to be as particular and descriptive as possible about your interpretation and experience of these drafts.
+      </div>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Hacker, D.J., Keener, M.C. and Kircher, J.C. (2009). Writing Is Applied Metacognition. In: <em>Handbook of Metacognition in Education.</em> Routledge/Taylor &amp; Francis, New York, 154–172.<br>
+        Harris, K. R., Santangelo, T., &amp; Graham, S. (2010). Metacognition and strategies instruction in writing. <em>Metacognition, strategy use, and instruction,</em> 226–256.<br>
+        Kellogg, R.T. (2008). Training writing skills: A cognitive developmental perspective. <em>Journal of Writing Research,</em> 1(1), 1–26.<br>
+        Sommers, N. (1980). Revision Strategies of Student Writers and Experienced Adult Writers. <em>College Composition and Communication,</em> 31(4), 378–388.
+      </div>`
+  },
+  {
+    id: 3,
+    text: "My essay prompts include <em>content goals</em> that list the <em>key topics</em> all successful essays must include.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Promoting self-efficacy by scaffolding assignments with content goals</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by developing students' sense of competence.</strong> And scaffolding assignments with <em>content goals</em> is one great way to do this.</p>
+      <p>Educators "scaffold" difficult assignments by gradually withdrawing support and guidance as their students gain competence and confidence.</p>
+      <p>Scaffolding can be built right into assignment prompts. According to educational researchers Kristen R. Butcher and Walter Kintsch, teachers can provide students support for difficult written assignments by providing "content goals" and "rhetorical goals."</p>
+      <p>Prompts with "content goals" provide support by naming the types of information students should consider. In their experiment, Butcher and Kintsch observed that students provided with content goals spend more time planning and drafting their arguments. In this way, content goals can foster in novice writers the habits of more experienced writers.</p>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        A professor who assigns students to write an essay on the Rwandan genocide can include "content goals" that prompt students to consider salient factors such as the role of local media, historical ethnic tensions, and Belgium's colonial legacy.
+      </div>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Kirsten R. Butcher &amp; Walter Kintsch (2001). Support of Content and Rhetorical Processes of Writing. <em>Cognition and Instruction,</em> 19:3, 277–322. DOI: 10.1207/S1532690XCI1903_2<br>
+        Perry D. Klein, Katrina N. Haug &amp; Nina Arcon (2017). The Effects of Rhetorical and Content Subgoals on Writing and Learning. <em>The Journal of Experimental Education,</em> 85:2, 291–308. DOI: 10.1080/00220973.2016.1143795
+      </div>`
+  },
+  {
+    id: 4,
+    text: "My essay prompts include <em>rhetorical goals</em> that list the <em>writerly moves</em> that all successful essays must include.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Promoting self-efficacy by scaffolding assignments with rhetorical goals</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by developing students' sense of competence.</strong> And scaffolding assignments with <em>rhetorical goals</em> is one great way to do this.</p>
+      <p>Educators "scaffold" difficult assignments by gradually withdrawing support and guidance as their students gain competence and confidence.</p>
+      <p>Prompts with "rhetorical goals" provide support by naming the writerly moves and habits of mind that students should utilize.</p>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        A professor who assigns students to write an essay on the Rwandan genocide can include "rhetorical goals" that prompt students to perform specific rhetorical moves such as anticipating likely counter-arguments, defining ambiguous or contested key terms, and synthesizing multiple viewpoints.
+      </div>
+      <p>Compared with content prompts, rhetorical prompts may better support learning, though they have the greatest impact on student learning when discussed and practiced in class, prior to drafting.</p>
+      <p>The most effective prompts feature both content and rhetorical goals, but the latter must be introduced early. For rhetorical prompts to be effective, teachers must dedicate class time to addressing students' popular misconceptions about writing goals, and introduce students to the rhetorical challenges inherent in writing.</p>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Kirsten R. Butcher &amp; Walter Kintsch (2001). Support of Content and Rhetorical Processes of Writing. <em>Cognition and Instruction,</em> 19:3, 277–322. DOI: 10.1207/S1532690XCI1903_2<br>
+        Perry D. Klein, Katrina N. Haug &amp; Nina Arcon (2017). The Effects of Rhetorical and Content Subgoals on Writing and Learning. <em>The Journal of Experimental Education,</em> 85:2, 291–308. DOI: 10.1080/00220973.2016.1143795
+      </div>`
+  },
+  {
+    id: 5,
+    text: "I provide students with anonymized versions of written feedback given to students who have completed the same work in past semesters.",
+    options: [
+      { label: "Very frequently",      value: 5 },
+      { label: "Somewhat frequently",  value: 4 },
+      { label: "Occasionally",         value: 3 },
+      { label: "Rarely",               value: 2 },
+      { label: "Never",                value: 1 }
+    ],
+    explanation: `
+      <h3>Promoting self-efficacy with transparent and consistent assessment methods</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by developing students' sense of competence.</strong> And consistent and transparent assessment methods are a great way to do this.</p>
+      <p>A student confident in his or her abilities may nevertheless lack the confidence they will receive a good grade. According to one study of students' justifications for academic misconduct, the sense that instructors graded students unfairly "was ranked as one of the five most acceptable justifications for cheating."</p>
+      <p>This happens when educators are (or appear to be) inconsistent or intransparent with their grading policies. Educators can also promote self-efficacy by creating consistency and transparent strategies for assessment.</p>
+      <h3>Increasing transparency with feedback to previous students</h3>
+      <p>Provide students with copies of feedback you've written to previous students. Provide examples of feedback on essays that represent a range of grades. I've never seen a student study any document more diligently, though these letters contain much the same information as the prompt.</p>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        Dear students,<br><br>
+        In the spirit of transparency, I thought you may like to see the feedback I've written to previous students on their final drafts. What trends or patterns do you notice in my responses to A, B, and C-level essays? What do my responses suggest about the relative value I place on each requirement?
+      </div>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Lang, James M. <em>Cheating Lessons.</em> Harvard University Press. Cambridge, MA. 2013.<br>
+        McCabe, Donald L., Kenneth D. Butterfield, and Linda K. Trevino. <em>Cheating in College: Why Students Do It and What Educators Can Do About It.</em> Baltimore: Johns Hopkins University Press, 2012.<br>
+        Murdock, Tamera B. and Eric M. Anderman. "Motivational Perspectives on Student Cheating: Toward an Integrated Model of Academic Dishonesty." <em>Educational Psychologist</em> 41.3 (2006): 131.
+      </div>`
+  },
+  {
+    id: 6,
+    text: "My essay prompts include detailed rubrics that identify and describe the specific skills and content I'll be looking for when it comes time for grading.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Promoting self-efficacy with rubrics</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by developing students' sense of competence.</strong> And rubrics are one great way to do this.</p>
+      <p>A student confident in his or her abilities may nevertheless lack the confidence they will receive a good grade. According to one study of students' justifications for academic misconduct, the sense that instructors graded students unfairly "was ranked as one of the five most acceptable justifications for cheating."</p>
+      <p>This happens when educators are (or appear to be) inconsistent or intransparent with their grading policies. Educators can also promote self-efficacy by creating consistency and transparent strategies for assessment. Below are three different ways to communicate your values and priorities — three different forms a rubric might take. Keep in mind, these can promote self-efficacy only if provided to students before they begin drafting. Set aside time in class for reviewing and discussing your assessment methods.</p>
+      <h3>Increasing transparency with a classic rubric</h3>
+      <p>In rows and columns, list the skills, strategies, information or qualities you're most eager to find in their writing, and describe the relative value you place on each assignment requirement.</p>
+      <div class="example-block">
+        <span class="example-label">Example rubric</span>
+        <em>Your final draft…</em><br><br>
+        represents a clever, plausible, and effective intervention of a problem articulated in our course readings. <strong>7.5/10</strong><br>
+        demonstrates a deep, nuanced understanding of course readings. <strong>7.5/10</strong><br>
+        indicates audience awareness. <strong>7.5/10</strong><br>
+        shows creativity. <strong>10/10</strong><br>
+        exhibits a high level of difficulty. <strong>10/10</strong><br>
+        has polish (is generally free of grammatical &amp; mechanical errors). <strong>9/10</strong><br>
+        is compelling &amp; persuasive. <strong>8/10</strong><br>
+        Total score: <strong>8.5/10</strong>
+      </div>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Lang, James M. <em>Cheating Lessons.</em> Harvard University Press. Cambridge, MA. 2013.<br>
+        McCabe, Donald L., Kenneth D. Butterfield, and Linda K. Trevino. <em>Cheating in College: Why Students Do It and What Educators Can Do About It.</em> Baltimore: Johns Hopkins University Press, 2012.<br>
+        Murdock, Tamera B. and Eric M. Anderman. "Motivational Perspectives on Student Cheating." <em>Educational Psychologist</em> 41.3 (2006): 131.
+      </div>`
+  },
+  {
+    id: 7,
+    text: "My students spend time in class analyzing model texts that demonstrate the skills and strategies I expect to find in their own writing.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Promoting self-efficacy by working with model texts</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by developing students' sense of competence.</strong> Working with model texts does this in multiple ways.</p>
+      <p>First of all, this kind of work is a powerful way of communicating and clarifying your expectations. Students tend to cheat less, and learn more, when expectations are clear.</p>
+      <p>Secondly, by analyzing model texts in class, you are dramatizing and demystifying an important stage in every writer's writing process. Students who are overwhelmed by a high-stakes writing assignment will be far less overwhelmed by smaller constituent tasks such as analyzing model texts.</p>
+      <p>Thirdly, this act of naming and describing writerly moves fosters metacognitive skills. And research tells us that we develop as writers when we make writerly decisions more consciously and more strategically. Having a large vocabulary of writerly moves is key.</p>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Charney, D. H., &amp; Carlson, R. A. (1995). Learning to Write in a Genre: What Student Writers Take from Model Texts. <em>Research in the Teaching of English,</em> 29(1), 88–125.<br>
+        Hacker, D.J., Keener, M.C. and Kircher, J.C. (2009). Writing Is Applied Metacognition. In: <em>Handbook of Metacognition in Education.</em> Routledge/Taylor &amp; Francis, New York, 154–172.<br>
+        Harris, K. R., Santangelo, T., &amp; Graham, S. (2010). Metacognition and strategies instruction in writing. <em>Metacognition, strategy use, and instruction,</em> 226–256.<br>
+        Kang, Eun Young. (2020). "Using model texts as a form of feedback in L2 writing." <em>System,</em> Volume 89.<br>
+        Kellogg, R.T. (2008). Training writing skills: A cognitive developmental perspective. <em>Journal of Writing Research,</em> 1(1), 1–26.<br>
+        Sommers, N. (1980). Revision Strategies of Student Writers and Experienced Adult Writers. <em>College Composition and Communication,</em> 31(4), 378–388.
+      </div>`
+  },
+  {
+    // Q8 is INVERTED
+    id: 8,
+    text: "My students' final grades are determined by a small number of high-stakes assignments.",
+    options: [
+      { label: "Always",              value: 1 },
+      { label: "Usually",             value: 2 },
+      { label: "About half of the time", value: 3 },
+      { label: "Rarely",              value: 4 },
+      { label: "Never",               value: 5 }
+    ],
+    explanation: `
+      <h3>Emphasizing mastery over performance</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by emphasizing mastery over performance.</strong> And a great way to do this is increasing the number of graded assignments.</p>
+      <p>By lowering the stakes of each assignment, teachers can demonstrate they value mastery over performance. A larger number of low-stakes assignments give students the affordance to view each assignment as an opportunity to grow through repeated failure. That's exactly the kind of risk-taking, mastery-oriented mentality educators hope to instill.</p>
+      <p>It's a paradox: Presented with more opportunities to cheat, students will cheat less often.</p>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Lang, James M. <em>Cheating Lessons.</em> Harvard University Press. Cambridge, MA. 2013.<br>
+        Murdock, Tamera B. and Eric M. Anderman. "Motivational Perspectives on Student Cheating: Toward an Integrated Model of Academic Dishonesty." <em>Educational Psychologist</em> 41.3 (2006): 131.
+      </div>`
+  },
+  {
+    id: 9,
+    text: "My assignments give students room to choose what topics, controversies, or readings they will write about.",
+    options: [
+      { label: "Complete freedom",                value: 5 },
+      { label: "Within very liberal parameters",  value: 4 },
+      { label: "Within moderate parameters",      value: 3 },
+      { label: "Within very prescribed parameters", value: 2 },
+      { label: "Not at all",                      value: 1 }
+    ],
+    explanation: `
+      <h3>Fostering intrinsic motivation</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by fostering intrinsic motivation.</strong></p>
+      <p>Research (and common sense) tells us we learn best when we're motivated to answer a question, or reach a goal, of our own creation.</p>
+      <p>Design assignments that invite students to consider how knowledge and skills gained in class could be applied to solve problems or achieve goals they care about.</p>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Bain, Ken. <em>What the Best College Students Do.</em> Cambridge, MA: Harvard University Press, 2012.<br>
+        Bain, Ken. <em>What the Best College Teachers Do.</em> Cambridge, MA: Harvard University Press, 2004.<br>
+        Kohn, Alfie. <em>Punished by Rewards: The Trouble with Gold Stars, Incentive Plans, A's, Praise, and Other Bribes.</em> Houghton Mifflin Co., 1999.
+      </div>`
+  },
+  {
+    id: 10,
+    text: "My classroom features structured conversations or activities that invite students to consider how our learning goals relate to their own intellectual and professional ambitions.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Fostering intrinsic motivation</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by fostering intrinsic motivation.</strong></p>
+      <p>Research (and common sense) tells us we learn best when we're motivated to answer a question, or reach a goal, of our own creation.</p>
+      <p>Design assignments that invite students to consider how knowledge and skills gained in class could be applied to solve problems or achieve goals they care about.</p>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Bain, Ken. <em>What the Best College Students Do.</em> Cambridge, MA: Harvard University Press, 2012.<br>
+        Bain, Ken. <em>What the Best College Teachers Do.</em> Cambridge, MA: Harvard University Press, 2004.<br>
+        Kohn, Alfie. <em>Punished by Rewards: The Trouble with Gold Stars, Incentive Plans, A's, Praise, and Other Bribes.</em> Houghton Mifflin Co., 1999.
+      </div>`
+  },
+  {
+    id: 11,
+    text: "My lessons and/or assignments <em>prime</em> students to remember and apply skills and knowledge they've already learned in previous lessons or courses.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Promoting self-efficacy through priming</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by developing students' sense of competence.</strong> And it helps to "prime" students to transfer knowledge and skills learned in class to projects and tests.</p>
+      <p>Instructors can "prime" students to apply classroom skills or strategies by asking them to list those skills and strategies before launching into a project. Priming promotes feelings of self-efficacy that correspond with increased learning and decreased cheating.</p>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        "Before you begin drafting, name the writing skills and strategies we've practiced so far this semester. Now, make a plan: where and how do you hope to implement them in your first draft?"
+      </div>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        Before posting an assignment, a professor might quiz her students, "Who can remember at least two of the four elements of NYU's student honor code?" Research suggests that even such simple priming can drastically reduce instances of cheating.
+      </div>
+      <div class="sources-mini">
+        <strong>Sources</strong>
+        Ambrose, Susan A. et al. <em>How Learning Works: 7 Research-Based Principles for Smart Teaching.</em> San Francisco: Jossey-Bass, 2010.<br>
+        Ariely, Dan. <em>The (Honest) Truth about Dishonesty: How We Lie to Everyone—Especially Ourselves.</em> New York: HarperCollins, 2012.<br>
+        Roumell, E. A. (2019). Priming Adult Learners for Learning Transfer: Beyond Content and Delivery. <em>Adult Learning,</em> 30(1), 15–22.
+      </div>`
+  },
+  {
+    id: 12,
+    text: "In my class, students learn principles and strategies they need to be effective peer-review partners.",
+    options: [
+      { label: "Completely agree",          value: 5 },
+      { label: "Mostly agree",              value: 4 },
+      { label: "Neither agree nor disagree", value: 3 },
+      { label: "Mostly disagree",           value: 2 },
+      { label: "Completely disagree",       value: 1 }
+    ],
+    explanation: null  // TK — no modal button
+  },
+  {
+    id: 13,
+    text: "In my classroom, large high-stakes projects are broken down into a series of smaller, low-stakes exercises.",
+    options: STD_OPTIONS,
+    explanation: `
+      <h3>Promoting self-efficacy by scaffolding assignments</h3>
+      <p><strong>Teachers can reduce cheating, and boost learning, by developing students' sense of competence.</strong></p>
+      <p>Educators "scaffold" difficult assignments by gradually withdrawing support and guidance as their students gain competence and confidence.</p>
+      <h3>Scaffolding with low-stakes exercises</h3>
+      <p>An instructor can break down large, complex assignments (such as essay writing) into a series of smaller, more manageable exercises. An instructor who wishes students to craft a typical research essay might begin by listing, for themself, the many activities involved in this work. For instance, to begin with, how do scholars in your field select a research question? Even this first step may seem intimidating or strange to the average undergraduate.</p>
+      <div class="example-block">
+        <span class="example-label">Example</span>
+        Before assigning a research essay, ask students to craft an annotated bibliography, as a way to identify and distinguish among the major and minor voices within a particular field or subfield. As a next step, ask students to identify gaps in existing research, questions that are understudied, or issues upon which scholarly opinion conflicts.
+      </div>`
+  }
+];
+
+// ──────────────────────────────────────────────
+// Screen management + hash routing
+// ──────────────────────────────────────────────
+
+// Screens that are directly addressable via URL hash
+const HASH_SCREENS = { home: 'screen-home', about: 'screen-about', sources: 'screen-sources' };
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (!el) return;
+  void el.offsetWidth; // force reflow so CSS transition plays
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Navigate to a named hash destination, updating the URL
+function navigate(hash) {
+  history.pushState(null, '', '#' + hash);
+  handleHash();
+}
+
+// Read the current hash and show the matching screen
+function handleHash() {
+  const hash = location.hash.replace('#', '') || 'home';
+  const screenId = HASH_SCREENS[hash];
+  if (screenId) {
+    showScreen(screenId);
+  }
+  // 'quiz' and 'results' are not directly navigable via hash —
+  // they require state, so fall back to home
+}
+
+// Handle browser back/forward
+window.addEventListener('popstate', handleHash);
+
+// ──────────────────────────────────────────────
+// Quiz logic
+// ──────────────────────────────────────────────
+function startQuiz() {
+  state.score = 0;
+  state.currentQuestion = 0;
+  state.answers = [];
+  renderQuestion(0);
+  showScreen('screen-quiz');
+}
+
+function renderQuestion(index) {
+  const q = questions[index];
+  const total = questions.length;
+
+  // Progress
+  const pct = Math.round((index / total) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Statement ${index + 1} of ${total}`;
+
+  // Question text (may contain HTML like <em>)
+  document.getElementById('question-text').innerHTML = q.text;
+
+  // Answer buttons
+  const btnContainer = document.getElementById('answer-buttons');
+  btnContainer.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = opt.label;
+    btn.onclick = () => selectAnswer(opt.value);
+    btnContainer.appendChild(btn);
+  });
+
+  // Explanation button
+  const explainWrap = document.getElementById('explain-btn-wrap');
+  if (q.explanation) {
+    explainWrap.innerHTML = `<button class="btn btn-outline btn-sm" onclick="openModal(questions[${index}].explanation)">What does this mean, and why does it matter?</button>`;
+  } else {
+    explainWrap.innerHTML = '';
+  }
+}
+
+function selectAnswer(value) {
+  state.score += value;
+  state.answers.push(value);
+  state.currentQuestion++;
+
+  if (state.currentQuestion < questions.length) {
+    renderQuestion(state.currentQuestion);
+  } else {
+    showResults();
+  }
+}
+
+function confirmReset() {
+  if (confirm('Start over? Your progress will be lost.')) {
+    navigate('home');
+  }
+}
+
+// ──────────────────────────────────────────────
+// Results
+// ──────────────────────────────────────────────
+function showResults() {
+  const score = state.score;
+  let headline, body;
+
+  if (score <= 25) {
+    headline = 'The likelihood of cheating in your classroom is high.';
+    body = `
+      <p>From the sound of things, your students may be unusually tempted to cheat.</p>
+      <p>Remember, humans are less likely to cheat (and more likely to learn) when they feel intrinsically motivated, highly prepared, and not overly pressured.</p>
+      <p>I hope this self-assessment leaves you with a few new ideas that you might implement to reduce students' incentives and motivations to cheat.</p>`;
+  } else if (score <= 45) {
+    headline = 'The likelihood of cheating in your classroom is probably low to moderate.';
+    body = `
+      <p>Your students are probably pretty engaged, but certain aspects of your classroom may feel overly intimidating or difficult, increasing the temptation to cheat.</p>
+      <p>Remember, humans are less likely to cheat (and more likely to learn) when they feel prepared, when they have multiple chances, and when they're intrinsically motivated.</p>`;
+  } else {
+    headline = 'The likelihood of cheating in your classroom is probably very low.';
+    body = `
+      <p>Wow! It sounds like your classroom provides little motivation or incentives for students to cheat. Keep up the good work.</p>
+      <p>You've crafted a learning environment that helps students to feel prepared, intrinsically motivated, and not overly pressured.</p>
+      <p>However, I hope this self-assessment left you with a few new ideas that you're not yet implementing.</p>`;
+  }
+
+  const examples = score > 45
+    ? `<ul>
+        <li>Allow students to see anonymized versions of the feedback you've provided to previous students who completed the same assignment. This will help students to understand expectations in a new way, and boost transparency and trust.</li>
+        <li>Add "content goals" to your prompts, so students understand the key concepts that every successful essay should include.</li>
+        <li>Add "rhetorical goals" to your prompts, so students understand the key writerly moves that every successful essay must make.</li>
+      </ul>`
+    : `<ul>
+        <li>Allow (or even require) students to revise high-stakes essays.</li>
+        <li>Add "content goals" to your prompts, so students understand the key concepts that every successful essay should include.</li>
+        <li>Add "rhetorical goals" to your prompts, so students understand the key writerly moves that every successful essay must make.</li>
+      </ul>`;
+
+  const card = document.getElementById('results-card');
+  card.innerHTML = `
+    <p class="score-badge">Your score: ${score} / 61</p>
+    <p class="result-header">${headline}</p>
+    ${body}
+    <div class="result-examples">
+      <strong>Examples of things you might try:</strong>
+      ${examples}
+    </div>
+    <div class="result-nav">
+      <button class="btn" onclick="state.score=0; navigate('home');">Return to start</button>
+      <button class="btn btn-outline" onclick="navigate('about')">About this checklist</button>
+      <button class="btn btn-outline btn-sm" onclick="navigate('sources')">Sources &amp; Further Reading</button>
+    </div>`;
+
+  showScreen('screen-results');
+}
+
+// ──────────────────────────────────────────────
+// Modal
+// ──────────────────────────────────────────────
+function openModal(html) {
+  document.getElementById('modal-body').innerHTML = html;
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close modal on backdrop click
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ──────────────────────────────────────────────
+// Init — read hash on load, default to home
+// ──────────────────────────────────────────────
+if (!location.hash) history.replaceState(null, '', '#home');
+handleHash();
+</script>
+</body>
+</html>
