@@ -298,33 +298,145 @@
   #explain-btn-wrap:empty { margin-bottom: 0; }
 
   /* ── Results screen ── */
-  #screen-results .result-header {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--violet);
-    margin-bottom: 0.8rem;
-  }
-  .score-badge {
+  .result-band {
     display: inline-block;
     background: var(--violet);
     color: #fff;
-    border-radius: 100px;
-    padding: 0.2rem 1rem;
+    border-radius: 6px;
+    padding: 0.3rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+  }
+  .result-headline {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--violet);
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+  }
+  .result-body { margin-bottom: 1.25rem; }
+
+  /* Category sub-score bars */
+  .cat-scores {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .cat-row {}
+  .cat-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.3rem;
+  }
+  .cat-label {
     font-size: 0.82rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    color: var(--text);
     text-transform: uppercase;
-    margin-bottom: 1rem;
+    letter-spacing: 0.04em;
   }
-  .result-examples {
-    background: var(--violet-tint);
-    border-left: 4px solid var(--violet);
-    border-radius: 0 6px 6px 0;
-    padding: 1rem 1.25rem;
-    margin: 1rem 0;
+  .cat-pct {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
   }
-  .result-examples ul { margin-bottom: 0; }
-  .result-nav { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.35rem; }
+  .cat-pct.cat-weak { color: #c0392b; }
+  .cat-bar-bg {
+    background: var(--border-light);
+    border-radius: 100px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .cat-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 0.7s ease;
+    background: var(--violet);
+  }
+  .cat-bar-fill.cat-weak { background: #c0392b; }
+  .cat-description {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  /* Suggestions */
+  .suggestions-section { margin-top: 1.5rem; }
+  .suggestions-section h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 0.85rem;
+  }
+  .suggestion-item {
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.6rem;
+    transition: border-color var(--transition);
+  }
+  .suggestion-item.priority { border-color: var(--violet); }
+  .suggestion-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+  .suggestion-cat-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #fff;
+    background: var(--violet);
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+    flex-shrink: 0;
+  }
+  .suggestion-priority-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #fff;
+    background: #c0392b;
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+    flex-shrink: 0;
+  }
+  .suggestion-text {
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.55;
+    margin-bottom: 0.4rem;
+  }
+  .suggestion-learn {
+    background: none;
+    border: none;
+    color: var(--violet);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+  }
+  .suggestion-learn:hover { color: var(--violet-hover); }
+  .show-more-wrap { text-align: center; margin-top: 0.5rem; }
+
+  .result-nav { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+
+  @media (max-width: 767px) {
+    .result-nav { flex-direction: column; }
+    .result-nav .btn, .result-nav .btn-outline { width: 100%; text-align: center; }
+  }
 
   /* ── Modal ── */
   #modal-overlay {
@@ -760,9 +872,37 @@ const STD_OPTIONS = [
   { label: "Never",               value: 1 }
 ];
 
+// ──────────────────────────────────────────────
+// Categories
+// ──────────────────────────────────────────────
+const CATEGORIES = {
+  efficacy: {
+    label: 'Self-Efficacy',
+    description: 'Does your classroom help students feel capable and prepared?',
+    color: '#57068c'
+  },
+  motivation: {
+    label: 'Intrinsic Motivation',
+    description: 'Does the work feel personally meaningful to students?',
+    color: '#702b9d'
+  },
+  transparency: {
+    label: 'Transparency & Feedback',
+    description: 'Are your expectations, grading, and feedback clear and consistent?',
+    color: '#9b4dca'
+  },
+  stakes: {
+    label: 'Low-Stakes Structure',
+    description: 'Is pressure reduced by spreading grades across many opportunities?',
+    color: '#b06fd8'
+  }
+};
+
 const questions = [
   {
     id: 1,
+    category: 'efficacy',
+    suggestion: 'Allow (or even require) students to revise high-stakes essays. Multiple drafts give students more chances to succeed — and less incentive to cheat.',
     text: "In my classroom, students have opportunities to revise high-stakes writing assignments.",
     options: STD_OPTIONS,
     explanation: `
@@ -789,6 +929,8 @@ const questions = [
   },
   {
     id: 2,
+    category: 'efficacy',
+    suggestion: 'Require written peer-review on major assignments. Giving feedback develops metacognitive skills that increase students\' sense of competence.',
     text: "My students are required to provide one another with written feedback on major written assignments.",
     options: STD_OPTIONS,
     explanation: `
@@ -816,6 +958,8 @@ const questions = [
   },
   {
     id: 3,
+    category: 'efficacy',
+    suggestion: 'Add "content goals" to your prompts — a list of key topics every successful essay should address. This scaffolding reduces the sense of overwhelm that can drive cheating.',
     text: "My essay prompts include <em>content goals</em> that list the <em>key topics</em> all successful essays must include.",
     options: STD_OPTIONS,
     explanation: `
@@ -836,6 +980,8 @@ const questions = [
   },
   {
     id: 4,
+    category: 'efficacy',
+    suggestion: 'Add "rhetorical goals" to your prompts — specific writerly moves every essay must make. Discuss these in class before students draft, so the goals become real strategies rather than abstract requirements.',
     text: "My essay prompts include <em>rhetorical goals</em> that list the <em>writerly moves</em> that all successful essays must include.",
     options: STD_OPTIONS,
     explanation: `
@@ -857,6 +1003,8 @@ const questions = [
   },
   {
     id: 5,
+    category: 'transparency',
+    suggestion: 'Share anonymized feedback from past students on the same assignment. Students study these more carefully than prompts, and the transparency builds trust and reduces the sense of arbitrary grading.',
     text: "I provide students with anonymized versions of written feedback given to students who have completed the same work in past semesters.",
     options: [
       { label: "Very frequently",      value: 5 },
@@ -886,6 +1034,8 @@ const questions = [
   },
   {
     id: 6,
+    category: 'transparency',
+    suggestion: 'Add a detailed rubric to your prompts that names the specific skills and content you\'ll grade. Unfair grading is one of students\' top justifications for cheating — transparency removes it.',
     text: "My essay prompts include detailed rubrics that identify and describe the specific skills and content I'll be looking for when it comes time for grading.",
     options: STD_OPTIONS,
     explanation: `
@@ -916,6 +1066,8 @@ const questions = [
   },
   {
     id: 7,
+    category: 'transparency',
+    suggestion: 'Spend class time analyzing model texts. This demystifies your expectations, builds metacognitive vocabulary, and shows students what success looks like — all of which reduce the anxiety that leads to cheating.',
     text: "My students spend time in class analyzing model texts that demonstrate the skills and strategies I expect to find in their own writing.",
     options: STD_OPTIONS,
     explanation: `
@@ -935,8 +1087,10 @@ const questions = [
       </div>`
   },
   {
-    // Q8 is INVERTED
+    // Q8 is INVERTED — "Always" = high risk, "Never" = low risk
     id: 8,
+    category: 'stakes',
+    suggestion: 'Spread grades across more, lower-stakes assignments. When any single assignment feels make-or-break, the incentive to cheat spikes. More attempts means more chances to grow — and less reason to cheat.',
     text: "My students' final grades are determined by a small number of high-stakes assignments.",
     options: [
       { label: "Always",              value: 1 },
@@ -958,6 +1112,8 @@ const questions = [
   },
   {
     id: 9,
+    category: 'motivation',
+    suggestion: 'Give students more choice in what they write about. Autonomy over topic is one of the strongest drivers of intrinsic motivation — and intrinsically motivated students rarely cheat.',
     text: "My assignments give students room to choose what topics, controversies, or readings they will write about.",
     options: [
       { label: "Complete freedom",                value: 5 },
@@ -980,6 +1136,8 @@ const questions = [
   },
   {
     id: 10,
+    category: 'motivation',
+    suggestion: 'Build in structured moments for students to connect course goals to their own ambitions. When students see personal relevance, they engage — and engagement is the best antidote to cheating.',
     text: "My classroom features structured conversations or activities that invite students to consider how our learning goals relate to their own intellectual and professional ambitions.",
     options: STD_OPTIONS,
     explanation: `
@@ -996,6 +1154,8 @@ const questions = [
   },
   {
     id: 11,
+    category: 'efficacy',
+    suggestion: 'Prime students before assignments by asking them to list relevant skills and strategies they\'ve already learned. This simple step activates prior knowledge, builds confidence, and has been shown to reduce cheating.',
     text: "My lessons and/or assignments <em>prime</em> students to remember and apply skills and knowledge they've already learned in previous lessons or courses.",
     options: STD_OPTIONS,
     explanation: `
@@ -1019,6 +1179,8 @@ const questions = [
   },
   {
     id: 12,
+    category: 'stakes',
+    suggestion: 'Teach students how to give good feedback before asking them to peer-review. Structured peer-review training turns a potentially awkward exercise into a genuine learning opportunity.',
     text: "In my class, students learn principles and strategies they need to be effective peer-review partners.",
     options: [
       { label: "Completely agree",          value: 5 },
@@ -1031,6 +1193,8 @@ const questions = [
   },
   {
     id: 13,
+    category: 'stakes',
+    suggestion: 'Break large projects into scaffolded low-stakes steps (annotated bibliography, outline, rough draft, etc.). Each step reduces overwhelm and gives you earlier chances to redirect struggling students.',
     text: "In my classroom, large high-stakes projects are broken down into a series of smaller, low-stakes exercises.",
     options: STD_OPTIONS,
     explanation: `
@@ -1146,57 +1310,163 @@ function confirmReset() {
 // ──────────────────────────────────────────────
 // Results
 // ──────────────────────────────────────────────
-function showResults() {
-  const score = state.score;
-  let headline, body;
 
-  if (score <= 25) {
-    headline = 'The likelihood of cheating in your classroom is high.';
-    body = `
-      <p>From the sound of things, your students may be unusually tempted to cheat.</p>
-      <p>Remember, humans are less likely to cheat (and more likely to learn) when they feel intrinsically motivated, highly prepared, and not overly pressured.</p>
-      <p>I hope this self-assessment leaves you with a few new ideas that you might implement to reduce students' incentives and motivations to cheat.</p>`;
-  } else if (score <= 45) {
-    headline = 'The likelihood of cheating in your classroom is probably low to moderate.';
-    body = `
-      <p>Your students are probably pretty engaged, but certain aspects of your classroom may feel overly intimidating or difficult, increasing the temptation to cheat.</p>
-      <p>Remember, humans are less likely to cheat (and more likely to learn) when they feel prepared, when they have multiple chances, and when they're intrinsically motivated.</p>`;
-  } else {
-    headline = 'The likelihood of cheating in your classroom is probably very low.';
-    body = `
-      <p>Wow! It sounds like your classroom provides little motivation or incentives for students to cheat. Keep up the good work.</p>
-      <p>You've crafted a learning environment that helps students to feel prepared, intrinsically motivated, and not overly pressured.</p>
-      <p>However, I hope this self-assessment left you with a few new ideas that you're not yet implementing.</p>`;
+// 5-band scoring
+const BANDS = [
+  { max: 25, label: 'Very High Risk',
+    headline: 'Your classroom has several significant risk factors for cheating.',
+    body: `<p>Based on your responses, students in your classroom may feel underprepared, extrinsically pressured, or disconnected from the work — all conditions that research links to higher rates of academic dishonesty.</p>
+           <p>The good news: most of the highest-impact changes are straightforward adjustments to how you design prompts and structure feedback. The personalized suggestions below are drawn directly from your lowest-scoring responses.</p>` },
+  { max: 33, label: 'High Risk',
+    headline: 'Your classroom has some notable risk factors worth addressing.',
+    body: `<p>Your responses suggest that while your classroom has real strengths, there are a few areas where students may feel unprepared, uncertain about expectations, or overly pressured — conditions that research links to academic dishonesty.</p>
+           <p>The targeted suggestions below are based on the specific practices where your responses were lowest.</p>` },
+  { max: 45, label: 'Moderate Risk',
+    headline: 'Your classroom is reasonably well-designed, with meaningful room to improve.',
+    body: `<p>Your responses suggest a thoughtful classroom with several protective factors against cheating. A few targeted changes could further reduce risk and strengthen student learning.</p>
+           <p>The suggestions below focus on the areas where your responses indicated the most room for growth.</p>` },
+  { max: 54, label: 'Low Risk',
+    headline: 'Your classroom discourages cheating in most meaningful ways.',
+    body: `<p>Your responses reflect a classroom that already implements many of the research-backed practices that reduce cheating and promote learning. Students are likely to feel capable, engaged, and fairly evaluated.</p>
+           <p>The suggestions below are drawn from the small number of areas where there may still be room to grow.</p>` },
+  { max: 61, label: 'Very Low Risk',
+    headline: 'Your classroom reflects best practices across nearly every dimension.',
+    body: `<p>Your responses suggest a classroom that creates conditions where cheating feels both unnecessary and unattractive. You're doing exceptional work across self-efficacy, motivation, transparency, and assessment structure.</p>
+           <p>The suggestions below highlight any remaining opportunities — even excellent classrooms can find one or two things worth refining.</p>` }
+];
+
+function getBand(score) {
+  return BANDS.find(b => score <= b.max) || BANDS[BANDS.length - 1];
+}
+
+function getCategoryScores() {
+  // Map category key → { total answered points, max possible points }
+  const cats = {};
+  Object.keys(CATEGORIES).forEach(k => { cats[k] = { earned: 0, max: 0 }; });
+
+  questions.forEach((q, i) => {
+    const answered = state.answers[i];
+    const maxForQ = Math.max(...q.options.map(o => o.value));
+    cats[q.category].earned += answered;
+    cats[q.category].max += maxForQ;
+  });
+
+  // Return as pct 0–100
+  const result = {};
+  Object.keys(cats).forEach(k => {
+    result[k] = cats[k].max > 0 ? Math.round((cats[k].earned / cats[k].max) * 100) : 0;
+  });
+  return result;
+}
+
+function buildSuggestions() {
+  const SHOW_INITIAL = 5;
+
+  // Score each question: normalize answered value to 0–100
+  const scored = questions.map((q, i) => {
+    const answered = state.answers[i];
+    const maxForQ = Math.max(...q.options.map(o => o.value));
+    const pct = Math.round((answered / maxForQ) * 100);
+    return { q, pct, index: i };
+  });
+
+  // Only surface questions where the answer was below 60% (i.e., not doing well)
+  const weak = scored
+    .filter(s => s.pct < 60)
+    .sort((a, b) => a.pct - b.pct); // worst first
+
+  if (weak.length === 0) {
+    return `<p style="color:var(--muted); font-style:italic;">Your responses didn't reveal any significant weak spots — great work across the board!</p>`;
   }
 
-  const examples = score > 45
-    ? `<ul>
-        <li>Allow students to see anonymized versions of the feedback you've provided to previous students who completed the same assignment. This will help students to understand expectations in a new way, and boost transparency and trust.</li>
-        <li>Add "content goals" to your prompts, so students understand the key concepts that every successful essay should include.</li>
-        <li>Add "rhetorical goals" to your prompts, so students understand the key writerly moves that every successful essay must make.</li>
-      </ul>`
-    : `<ul>
-        <li>Allow (or even require) students to revise high-stakes essays.</li>
-        <li>Add "content goals" to your prompts, so students understand the key concepts that every successful essay should include.</li>
-        <li>Add "rhetorical goals" to your prompts, so students understand the key writerly moves that every successful essay must make.</li>
-      </ul>`;
+  const catLabels = Object.fromEntries(
+    Object.entries(CATEGORIES).map(([k, v]) => [k, v.label])
+  );
+
+  function renderItem(s, i) {
+    const isPriority = s.pct <= 40;
+    const hidden = i >= SHOW_INITIAL ? ' style="display:none"' : '';
+    const dataIdx = s.index;
+    const hasExplanation = !!s.q.explanation;
+    return `
+      <div class="suggestion-item${isPriority ? ' priority' : ''}"${hidden} data-suggestion="${i}">
+        <div class="suggestion-header">
+          ${isPriority ? '<span class="suggestion-priority-tag">Priority</span>' : ''}
+          <span class="suggestion-cat-tag">${catLabels[s.q.category]}</span>
+        </div>
+        <p class="suggestion-text">${s.q.suggestion}</p>
+        ${hasExplanation ? `<button class="suggestion-learn" onclick="openModal(questions[${dataIdx}].explanation)">Read the research →</button>` : ''}
+      </div>`;
+  }
+
+  const items = weak.map((s, i) => renderItem(s, i)).join('');
+
+  const showMoreBtn = weak.length > SHOW_INITIAL
+    ? `<div class="show-more-wrap">
+         <button class="btn btn-outline btn-sm" onclick="showAllSuggestions(this)">
+           Show ${weak.length - SHOW_INITIAL} more suggestions
+         </button>
+       </div>`
+    : '';
+
+  return `${items}${showMoreBtn}`;
+}
+
+function showAllSuggestions(btn) {
+  document.querySelectorAll('[data-suggestion]').forEach(el => el.style.display = '');
+  btn.parentElement.remove();
+}
+
+function showResults() {
+  const score = state.score;
+  const band = getBand(score);
+  const catScores = getCategoryScores();
+
+  // Category bars HTML
+  const catBarsHtml = Object.entries(CATEGORIES).map(([key, cat]) => {
+    const pct = catScores[key];
+    const isWeak = pct < 50;
+    return `
+      <div class="cat-row">
+        <div class="cat-row-header">
+          <span class="cat-label">${cat.label}</span>
+          <span class="cat-pct${isWeak ? ' cat-weak' : ''}">${pct}%</span>
+        </div>
+        <div class="cat-bar-bg">
+          <div class="cat-bar-fill${isWeak ? ' cat-weak' : ''}" style="width:${pct}%"></div>
+        </div>
+        <div class="cat-description">${cat.description}</div>
+      </div>`;
+  }).join('');
 
   const card = document.getElementById('results-card');
   card.innerHTML = `
-    <p class="score-badge">Your score: ${score} / 61</p>
-    <p class="result-header">${headline}</p>
-    ${body}
-    <div class="result-examples">
-      <strong>Examples of things you might try:</strong>
-      ${examples}
+    <div class="result-band">${band.label}</div>
+    <p class="result-headline">${band.headline}</p>
+    <div class="result-body">${band.body}</div>
+
+    <div class="cat-scores">${catBarsHtml}</div>
+
+    <div class="suggestions-section">
+      <h3>Personalized suggestions — based on your responses</h3>
+      ${buildSuggestions()}
     </div>
+
     <div class="result-nav">
-      <button class="btn" onclick="state.score=0; navigate('home');">Return to start</button>
+      <button class="btn" onclick="state.score=0; state.answers=[]; navigate('home');">Start over</button>
       <button class="btn btn-outline" onclick="navigate('about')">About this checklist</button>
       <button class="btn btn-outline btn-sm" onclick="navigate('sources')">Sources &amp; Further Reading</button>
     </div>`;
 
   showScreen('screen-results');
+  // Animate bars after paint
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.cat-bar-fill').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0%';
+      requestAnimationFrame(() => { bar.style.width = w; });
+    });
+  });
 }
 
 // ──────────────────────────────────────────────
